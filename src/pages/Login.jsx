@@ -3,6 +3,8 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import { app } from "../firebase.config";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/slices/userSlice";
 
 import c1p1 from "../assets/Login/c1p1.png";
 import c1p2 from "../assets/Login/c1p2.png";
@@ -15,9 +17,10 @@ import c3p2 from "../assets/Login/c3p2.png";
 import c3p3 from "../assets/Login/c3p3.png";
 import Logo from "../assets/Login/logo-vibe.png";
 
-function  Login() {
+function Login() {
   const navigate = useNavigate();
-  console.log(app)
+  const dispatch = useDispatch();
+  // console.log(app)
 
   const handleGoogleSignIn = async () => {
     const auth = getAuth(app);
@@ -26,15 +29,27 @@ function  Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log("User Details:", {
-        name: user.displayName,
+  
+      // Save user details to localStorage
+      localStorage.setItem('user', JSON.stringify({
+        username: user.displayName,
         email: user.email,
-        photo: user.photoURL,
-      });
-      navigate("/feeds");
+        photoURL: user.photoURL,
+      }));
+  
+      // Optionally, dispatch the user details to Redux (if you're using Redux)
+      dispatch(setUser({
+        username: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+      }));
+  
+      // Redirect to the feeds page
+      navigate('/feeds');
     } catch (error) {
-      console.error("Error during sign-in:", error.message);
+      console.error('Error during sign-in:', error.message);
     }
+  
   };
 
   return (
