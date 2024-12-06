@@ -14,8 +14,9 @@ import { FcGoogle } from "react-icons/fc";
 function Login() {
   return (
     <div className="flex items-center relative justify-center flex-col border border-black">
+      <div className="flex flex-col h-[800px]">
       {/* Images Container */}
-      <div className="columns-3 w-[360px] relative">
+      <div className="columns-3 w-[360px]  relative">
         <img src={c1p1} className="mb-3" />
         <img src={c1p2} className="mb-3" />
         <img src={c1p3} className="mb-3" />
@@ -27,7 +28,7 @@ function Login() {
         <img src={c3p3} className="mb-3" />
       </div>
       {/* Overlayed Gray Box */}
-      <div className="absolute rounded-[60px] bg-white w-[360px] h-[250px]  bottom-[-60px] z-10 flex flex-col items-center gap-4">
+      <div className="absolute rounded-[60px] bg-white w-[360px] h-[250px]  bottom-[80px] z-10 flex flex-col items-center gap-4">
         <div className="flex mt-10 ">
           <img src={Logo}></img> <div className="font-semibold text-lg">Vibesnap</div>
         </div>
@@ -36,6 +37,7 @@ function Login() {
           <FcGoogle fontSize={18} />
           <div className="text-sm">Continue with Google</div>
         </button>
+      </div>
       </div>
     </div>
   );

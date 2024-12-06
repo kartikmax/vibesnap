@@ -7,17 +7,20 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Feeds from "./pages/Feeds";
 import EditProfile from "./pages/EditProfile";
+import CreatePosts from './pages/CreatePosts'
+import ChoosePosts from "./pages/ChoosePosts";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/" element={<App />} /> */}
+        <Route path="/" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/feeds" element={<Feeds />} />
         <Route path="/editprofile" element={<EditProfile />} />
-        <Route path="/createPosts" element={<EditProfile />} />
+        <Route path="/createPosts" element={<CreatePosts />} />
+        <Route path="/choosePosts" element={<ChoosePosts />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
