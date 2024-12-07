@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Menu from "../assets/Feeds/Menu.png";
 import Nyc1 from "../assets/Feeds/nyc1.png";
 import Nyc2 from "../assets/Feeds/nyc2.png";
@@ -9,19 +9,48 @@ import Dialog from "rc-dialog";
 import "rc-dialog/assets/index.css";
 import { sharePost } from "./constants";
 import Copy from "../assets/Feeds/copy.png";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { doc, setDoc, getDoc, collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase.config";
 
 function Feeds() {
   const navigate = useNavigate();
 
   const [visible, setVisible] = useState(false);
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const { username, photoURL, bio, bannerURL } = storedUser || {};
 
-  const { username, photoURL } = useSelector((state) => state.user);
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const usersCollectionRef = collection(db, "usersData");
+
+    if (!storedUser) {
+      const authUser = {
+        username: username,
+        photoURL: photoURL,
+        bio: "Hi I am using Vibesnap",
+        loggedIn: true,
+      };
+
+      const userDocRef = doc(db, "users", authUser.username);
+
+      getDoc(userDocRef).then((docSnap) => {
+        if (!docSnap.exists()) {
+          setDoc(userDocRef, authUser).then(() => {
+            console.log("User created in Firestore");
+          });
+          addDoc(usersCollectionRef, authUser);
+          console.log("users added");
+        }
+      });
+
+      localStorage.setItem("user", JSON.stringify(authUser));
+    }
+  }, []);
 
   const showDialog = () => setVisible(true);
   const closeDialog = () => setVisible(false);
-  console.log(photoURL);
 
   return (
     <div className="flex items-center relative justify-center flex-col ">
@@ -29,7 +58,7 @@ function Feeds() {
         <nav className="border border-black flex">
           <button
             onClick={() => {
-              navigate("/editProfile");
+              navigate("/profile");
             }}
           >
             <img
@@ -40,7 +69,7 @@ function Feeds() {
           </button>
           <div>
             <div className="text-xs">Welcome Back</div>
-            <div className="font-semibold">{username ? username : "user"}</div>
+            <div className="font-semibold">{username || "user"}</div>
           </div>
         </nav>
         <div className="font-semibold text-[24px]">Feeds</div>

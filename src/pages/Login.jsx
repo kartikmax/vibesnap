@@ -1,10 +1,13 @@
 import React from "react";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider ,} from "firebase/auth";
 import { useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import { app } from "../firebase.config";
-import { useDispatch } from "react-redux";
-import { setUser } from "../store/slices/userSlice";
+// import { useDispatch } from "react-redux";
+// import { setUser } from "../store/slices/userSlice";
+
+import { db } from "../firebase.config";
+import { addDoc, collection, query, where, getDocs  } from "firebase/firestore";
 
 import c1p1 from "../assets/Login/c1p1.png";
 import c1p2 from "../assets/Login/c1p2.png";
@@ -17,40 +20,58 @@ import c3p2 from "../assets/Login/c3p2.png";
 import c3p3 from "../assets/Login/c3p3.png";
 import Logo from "../assets/Login/logo-vibe.png";
 
+function returnTheTag(inputString) {
+  const noSpaces = inputString.split(" ").join("");
+  const randomThreeDigit = Math.floor(100 + Math.random() * 900);
+  return noSpaces + randomThreeDigit;
+}
+
 function Login() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // console.log(app)
+  // const dispatch = useDispatch();
 
-  const handleGoogleSignIn = async () => {
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+const handleGoogleSignIn = async () => {
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-  
-      // Save user details to localStorage
-      localStorage.setItem('user', JSON.stringify({
-        username: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-      }));
-  
-      // Optionally, dispatch the user details to Redux (if you're using Redux)
-      dispatch(setUser({
-        username: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-      }));
-  
-      // Redirect to the feeds page
-      navigate('/feeds');
-    } catch (error) {
-      console.error('Error during sign-in:', error.message);
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    const authUser = {
+      username: user.displayName || "user",
+      email: user.email,
+      photoURL: user.photoURL || "default_photo_url",
+      bio: "Hi I am using Vibesnap",
+      loggedIn: true,
+      bannerURL: user.bannerURL,
+      tag: returnTheTag(user.displayName),
+      uid:user.uid
+    };
+
+    // Reference the collection
+    const userCollectionRef = collection(db, "users");
+
+    // Query to check if a user with the same email already exists
+    const q = query(userCollectionRef, where("email", "==", authUser.email));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      // Add the user if no existing document matches
+      const docRef = await addDoc(userCollectionRef, authUser);
+      console.log("User added to Firestore with ID:", docRef.id);
+    } else {
+      console.log("User already exists in Firestore.");
     }
+
+    localStorage.setItem("user", JSON.stringify(authUser));
+    navigate("/feeds");
+  } catch (error) {
+    console.error("Error during sign-in:", error.message);
+  }
+};
+
   
-  };
 
   return (
     <div className="flex items-center relative justify-center flex-col border border-black">
