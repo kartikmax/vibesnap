@@ -10,8 +10,11 @@ import "rc-dialog/assets/index.css";
 import { sharePost } from "./constants";
 import Copy from "../assets/Feeds/copy.png";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 function Feeds() {
+  const navigate = useNavigate();
+
   const [visible, setVisible] = useState(false);
 
   const { username, photoURL } = useSelector((state) => state.user);
@@ -24,11 +27,17 @@ function Feeds() {
     <div className="flex items-center relative justify-center flex-col ">
       <div className="w-[360px] flex  flex-col border border-black gap-2">
         <nav className="border border-black flex">
-          <img
-            src={photoURL}
-            alt="profile image"
-            className="w-[50px] h-[50px] rounded-full"
-          />
+          <button
+            onClick={() => {
+              navigate("/editProfile");
+            }}
+          >
+            <img
+              src={photoURL}
+              alt="profile image"
+              className="w-[50px] h-[50px] rounded-full"
+            />
+          </button>
           <div>
             <div className="text-xs">Welcome Back</div>
             <div className="font-semibold">{username ? username : "user"}</div>

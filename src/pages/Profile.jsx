@@ -5,15 +5,28 @@ import c1p1 from "../assets/Profile/c1p1.png";
 import c1p2 from "../assets/Profile/c1p2.png";
 import c2p1 from "../assets/Profile/c2p1.png";
 import { BsPlus } from "react-icons/bs";
+import { useNavigate } from "react-router";
+import { IoMdArrowBack } from "react-icons/io";
 
 function Profile() {
+  const navigate = useNavigate()
   return (
     <div className="flex items-center relative justify-center flex-col">
       <div className="w-[360px] h-[800px] flex flex-col border relative border-black gap-2">
         {/* Banner Image */}
         <div className="relative">
-          <img src={Banner} className=" h-[180px]" alt="Banner" />
-
+          
+          <nav className="flex z-10 absolute text-white items-center py-3 ">
+            <button
+              className="px-3"
+              onClick={() => {
+                navigate('/feeds');
+              }}
+            >
+              <IoMdArrowBack fontSize={20} />
+            </button>
+            </nav>
+            <img src={Banner} className=" h-[180px]" alt="Banner" />
           {/* Profile Image */}
           <div className="absolute left-[10px] bottom-[-40px]">
             <img
@@ -24,7 +37,9 @@ function Profile() {
           </div>
         </div>
         <div className="flex justify-end">
-          <button className="rounded-full border border-[#00000057] px-4 py-1 text-[12px] w-[200px]">
+          <button className="rounded-full border border-[#00000057] px-4 py-1 text-[12px] w-[200px]" onClick={()=>{
+            navigate('/editProfile')
+          }}>
             Edit Profile
           </button>
         </div>
