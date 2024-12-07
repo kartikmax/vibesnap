@@ -5,6 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { app } from "../firebase.config";
 // import { useDispatch } from "react-redux";
 // import { setUser } from "../store/slices/userSlice";
+import Banner from "../assets/Profile/banner.png"
 
 import { db } from "../firebase.config";
 import { addDoc, collection, query, where, getDocs  } from "firebase/firestore";
@@ -44,7 +45,7 @@ const handleGoogleSignIn = async () => {
       photoURL: user.photoURL || "default_photo_url",
       bio: "Hi I am using Vibesnap",
       loggedIn: true,
-      bannerURL: user.bannerURL,
+      bannerURL: user.bannerURL||Banner,
       tag: returnTheTag(user.displayName),
       uid:user.uid
     };

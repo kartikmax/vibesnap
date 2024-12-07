@@ -8,15 +8,12 @@ import { IoMdArrowBack } from "react-icons/io";
 import Banner from "../assets/Profile/banner.png";
 // import Banner from "../assets/Profile/banner.png";
 import ProfileImg from "../assets/Profile/profile.png";
-// import c1p1 from "../assets/Profile/c1p1.png";
-// import c1p2 from "../assets/Profile/c1p2.png";
-// import c2p1 from "../assets/Profile/c2p1.png";
 import Skeleton from "./components/Skeleton";
 
 function Profile() {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
-  const [uploading, setUploading] = useState(false);
+  // const fileInputRef = useRef(null);
+  // const [uploading, setUploading] = useState(false);
   const [postUrls, setPostUrls] = useState([]); // Store post URLs
   const [loadingPosts, setLoadingPosts] = useState(true);
 
@@ -27,12 +24,12 @@ function Profile() {
   const { username, photoURL, bio, bannerURL, uid } = storedUser || {};
 
   // Function to handle file selection
-  const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      handleUpload(file);
-    }
-  };
+  // const handleFileSelect = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     handleUpload(file);
+  //   }
+  // };
 
   // Function to upload files to Firebase Storage
   const handleUpload = async (file) => {
@@ -70,7 +67,7 @@ function Profile() {
     }
 
     setLoadingPosts(true);
-    const postsRef = ref(storage, `users/${uid}/posts/`);
+    const postsRef = ref(storage, `users/${uid}/posts`);
 
     try {
       const listResult = await listAll(postsRef); // List all files in the directory
@@ -86,9 +83,9 @@ function Profile() {
   };
 
   // Trigger file input click
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
+  // const triggerFileInput = () => {
+  //   fileInputRef.current.click();
+  // };
 
   // Fetch posts on component mount
   useEffect(() => {
@@ -163,19 +160,20 @@ function Profile() {
         </div>
 
         {/* Hidden File Input */}
-        <input
+        {/* <input
           type="file"
           accept="image/*"
           ref={fileInputRef}
           style={{ display: "none" }}
           onChange={handleFileSelect}
-        />
+        /> */}
 
         {/* "+" Button */}
         <button
           className="w-[50px] h-[50px] absolute z-10 rounded-full bottom-40 right-2 bg-[#000000] text-white flex justify-center items-center "
-          onClick={triggerFileInput}
-          disabled={uploading} // Disable the button while uploading
+          onClick={()=>{
+            navigate('/createPosts')
+          }}
         >
           <BsPlus fontSize={30} />
         </button>
