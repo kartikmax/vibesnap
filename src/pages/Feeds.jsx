@@ -120,7 +120,7 @@ function Feeds() {
                   name={post.username}
                   photoURL={post.photoURL}
                   showDialog={showDialog}
-                  background={i % 2 === 0 ? "[#F7EBFF]" : "[#FFFAEE]"}
+                  background={i % 2 === 0 ? "bg-[#f7ebff]" : "bg-[#fffaee]"}
                 />
               ))}
         </section>

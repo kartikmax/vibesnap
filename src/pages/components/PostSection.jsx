@@ -19,7 +19,7 @@ function PostSection({
 }) {
   return (
     <section
-      className={`bg-${background} h-[300px] px-5 py-3  w-full rounded-[26px]`}
+      className={`${background} h-[280px] px-5 py-3  w-full rounded-[26px]`}
     >
       <div className="flex items-center justify-start  gap-2 ">
         <img src={photoURL} alt={photoURL} className="w-10 h-10 rounded-full" />
