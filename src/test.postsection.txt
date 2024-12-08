@@ -1,0 +1,133 @@
+<section className="bg-[#F7EBFF] h-[300px] w-full rounded-[26px]">
+      <div className="flex items-center justify-start gap-2 ">
+        <img src={Menu} alt="profile image" className="w-10 h-10" />
+        <div className="flex flex-col">
+          <div className="font-bold">Aarav</div>
+          <div className="font-thin text-xs">2 hours ago</div>
+        </div>
+      </div>
+      <div className="caption font-normal text-[12px]">
+        Just arrived in New York City! Excited to explore the sights,
+        sounds, and energy of this amazing place. 🗽 #NYC #Travel
+      </div>
+      <section className="flex gap-1 items-center justify-center">
+        <img src={Nyc1} />
+        <img src={Nyc1} />
+        <img src={Nyc2} />
+        <img src={Nyc1} />
+      </section>
+      <div className="flex justify-between px-3 pt-3 items-center">
+        <div className="hearts flex  items-center justify-center text-[#D95B7F]">
+          <div className="">
+            <IoHeartSharp />
+          </div>
+          <div className="text-sm ">67</div>
+        </div>
+        <button
+          className="send flex w-[80px] justify-center px-2 py-1 rounded-3xl bg-[#00000012] items-center"
+          onClick={showDialog}
+        >
+          <RiSendPlaneFill />
+          <div className="fill-black text-xs">Share</div>
+        </button>
+      </div>
+    </section>
+
+//two colors for feeds    [#F7EBFF] [#FFFAEE] 
+----------------------------------------
+feeds hardcoded 
+----------------------------------------
+
+          <section className="bg-[#F7EBFF] h-[300px] w-full rounded-[26px]">
+            <div className="flex items-center justify-start gap-2 ">
+              <img src={Menu} alt="profile image" className="w-10 h-10" />
+              <div className="flex flex-col">
+                <div className="font-bold">Aarav</div>
+                <div className="font-thin text-xs">2 hours ago</div>
+              </div>
+            </div>
+            <div className="caption font-normal text-[12px]">
+              Just arrived in New York City! Excited to explore the sights,
+              sounds, and energy of this amazing place. 🗽 #NYC #Travel
+            </div>
+            <section className="flex gap-1 items-center justify-center">
+              <img src={Nyc1} />
+              <img src={Nyc2} />
+            </section>
+            <div className="flex justify-between px-3 pt-3 items-center">
+              <div className="hearts flex  items-center justify-center text-[#D95B7F]">
+                <div className="">
+                  <IoHeartSharp />
+                </div>
+                <div className="text-sm ">67</div>
+              </div>
+              <button
+                className="send flex w-[80px] justify-center px-2 py-1 rounded-3xl bg-[#00000012] items-center"
+                onClick={showDialog}
+              >
+                <RiSendPlaneFill />
+                <div className="fill-black text-xs">Share</div>
+              </button>
+            </div>
+          </section>
+          <section className="bg-[#FFFAEE] h-[300px] w-full rounded-[26px]">
+            <div className="flex items-center justify-start gap-2 ">
+              <img src={Menu} alt="profile image" className="w-10 h-10" />
+              <div className="flex flex-col">
+                <div className="font-bold">Sneha</div>
+                <div className="font-thin text-xs">2 hours ago</div>
+              </div>
+            </div>
+            <div className="caption font-normal text-[12px]">
+              Taking a moment to slow down, breathe, and focus on myself. 🌿✨
+              Self-care isn't selfish - it's necessary. 💕 #SelfCare #MeTime
+              #Wellness
+            </div>
+            <section className="flex gap-1 items-center justify-center">
+              <img src={Vid1} />
+            </section>
+            <div className="flex justify-between px-3 pt-3 items-center">
+              <div className="hearts flex  items-center justify-center text-[#D95B7F]">
+                <div className="">
+                  <IoHeartSharp />
+                </div>
+                <div className="text-sm ">67</div>
+              </div>
+              <button className="send flex w-[80px] justify-center px-2 py-1 rounded-3xl bg-[#00000012] items-center">
+                <RiSendPlaneFill />
+                <div className="fill-black text-xs">Share</div>
+              </button>
+            </div>
+          </section>
+          <section className="bg-[#F7EBFF] h-[300px] w-full rounded-[26px]">
+            <div className="flex items-center justify-start gap-2 ">
+              <img src={Menu} alt="profile image" className="w-10 h-10" />
+              <div className="flex flex-col">
+                <div className="font-bold">Aarav</div>
+                <div className="font-thin text-xs">2 hours ago</div>
+              </div>
+            </div>
+            <div className="caption font-normal text-[12px]">
+              Just arrived in New York City! Excited to explore the sights,
+              sounds, and energy of this amazing place. 🗽 #NYC #Travel
+            </div>
+            <section className="flex gap-1 items-center justify-center">
+              <img src={Nyc1} />
+              <img src={Nyc2} />
+            </section>
+            <div className="flex justify-between px-3 pt-3 items-center">
+              <div className="hearts flex  items-center justify-center text-[#D95B7F]">
+                <div className="">
+                  <IoHeartSharp />
+                </div>
+                <div className="text-sm ">67</div>
+              </div>
+              <button
+                className="send flex w-[80px] justify-center px-2 py-1 rounded-3xl bg-[#00000012] items-center"
+                onClick={showDialog}
+              >
+                <RiSendPlaneFill />
+                <div className="fill-black text-xs">Share</div>
+              </button>
+            </div>
+          </section>

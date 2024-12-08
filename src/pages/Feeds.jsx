@@ -9,17 +9,53 @@ import Dialog from "rc-dialog";
 import "rc-dialog/assets/index.css";
 import { sharePost } from "./constants";
 import Copy from "../assets/Feeds/copy.png";
-// import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { doc, setDoc, getDoc, collection, addDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  collection,
+  addDoc,
+} from "firebase/firestore";
 import { db } from "../firebase.config";
+import { getAuth } from "firebase/auth";
+import PostSection from "./components/PostSection";
+import "../App.css";
+import { BsPlus } from "react-icons/bs";
 
 function Feeds() {
   const navigate = useNavigate();
 
   const [visible, setVisible] = useState(false);
+  const [posts, setPosts] = useState([]);
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const { username, photoURL, bio, bannerURL } = storedUser || {};
+  const auth = getAuth();
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const postsCollectionRef = collection(db, "posts"); // Adjust collection name if different
+        const querySnapshot = await getDocs(postsCollectionRef);
+
+        const allPosts = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setPosts(allPosts);
+        // console.log("Fetched posts:", allPosts);
+      } catch (error) {
+        navigate("/");
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  console.log(posts);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -54,8 +90,8 @@ function Feeds() {
 
   return (
     <div className="flex items-center relative justify-center flex-col ">
-      <div className="w-[360px] flex  flex-col border border-black gap-2">
-        <nav className="border border-black flex">
+      <div className="w-[360px] flex relative  flex-col border gap-2">
+        <nav className="flex mx-2">
           <button
             onClick={() => {
               navigate("/profile");
@@ -67,76 +103,38 @@ function Feeds() {
               className="w-[50px] h-[50px] rounded-full"
             />
           </button>
-          <div>
-            <div className="text-xs">Welcome Back</div>
+          <div className="items-center mt-1 px-2  ">
+            <div className="text-xs ">Welcome Back</div>
             <div className="font-semibold">{username || "user"}</div>
           </div>
         </nav>
-        <div className="font-semibold text-[24px]">Feeds</div>
-        <section className="flex flex-col gap-2">
-          <div className="bg-[#F7EBFF] h-[300px] w-full rounded-[26px]">
-            <div className="flex items-center justify-start gap-2 ">
-              <img src={Menu} alt="profile image" className="w-10 h-10" />
-              <div className="flex flex-col">
-                <div className="font-bold">Aarav</div>
-                <div className="font-thin text-xs">2 hours ago</div>
-              </div>
-            </div>
-            <div className="caption font-normal text-[12px]">
-              Just arrived in New York City! Excited to explore the sights,
-              sounds, and energy of this amazing place. 🗽 #NYC #Travel
-            </div>
-            <section className="flex gap-1 items-center justify-center">
-              <img src={Nyc1} />
-              <img src={Nyc2} />
-            </section>
-            <div className="flex justify-between px-3 pt-3 items-center">
-              <div className="hearts flex  items-center justify-center text-[#D95B7F]">
-                <div className="">
-                  <IoHeartSharp />
-                </div>
-                <div className="text-sm ">67</div>
-              </div>
-              <button
-                className="send flex w-[80px] justify-center px-2 py-1 rounded-3xl bg-[#00000012] items-center"
-                onClick={showDialog}
-              >
-                <RiSendPlaneFill />
-                <div className="fill-black text-xs">Share</div>
-              </button>
-            </div>
-          </div>
-          <div className="bg-[#FFFAEE] h-[300px] w-full rounded-[26px]">
-            <div className="flex items-center justify-start gap-2 ">
-              <img src={Menu} alt="profile image" className="w-10 h-10" />
-              <div className="flex flex-col">
-                <div className="font-bold">Sneha</div>
-                <div className="font-thin text-xs">2 hours ago</div>
-              </div>
-            </div>
-            <div className="caption font-normal text-[12px]">
-              Taking a moment to slow down, breathe, and focus on myself. 🌿✨
-              Self-care isn't selfish - it's necessary. 💕 #SelfCare #MeTime
-              #Wellness
-            </div>
-            <section className="flex gap-1 items-center justify-center">
-              <img src={Vid1} />
-            </section>
-            <div className="flex justify-between px-3 pt-3 items-center">
-              <div className="hearts flex  items-center justify-center text-[#D95B7F]">
-                <div className="">
-                  <IoHeartSharp />
-                </div>
-                <div className="text-sm ">67</div>
-              </div>
-              <button className="send flex w-[80px] justify-center px-2 py-1 rounded-3xl bg-[#00000012] items-center">
-                <RiSendPlaneFill />
-                <div className="fill-black text-xs">Share</div>
-              </button>
-            </div>
-          </div>
+        <div className="font-semibold text-[24px] mx-3">Feeds</div>
+        <section className="flex flex-col gap-2 mx-3 overflow-y-scroll  h-screen">
+          {posts.length === 0
+            ? "loading..."
+            : posts.map((post, i) => (
+                <PostSection
+                  key={post.id} // Always provide a unique key for lists
+                  caption={post.caption}
+                  likes={post.likes}
+                  post={post.postURL}
+                  name={post.username}
+                  photoURL={post.photoURL}
+                  showDialog={showDialog}
+                  background={i % 2 === 0 ? "[#F7EBFF]" : "[#FFFAEE]"}
+                />
+              ))}
         </section>
+        <button
+        className="w-[50px] h-[50px] absolute z-10 rounded-full bottom-32 right-2 bg-[#000000] text-white flex justify-center items-center "
+        onClick={() => {
+          navigate("/createPosts");
+        }}
+      >
+        <BsPlus fontSize={30} />
+      </button>
       </div>
+      
       <Dialog
         visible={visible}
         onClose={closeDialog}

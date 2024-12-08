@@ -139,10 +139,10 @@ function Profile() {
 
           {postUrls.length === 0 ? (
             <div className="columns-2 gap-2 mt-3 w-30">
-              <Skeleton className="w-158 h-192 mb-2 rounded-md" />
-              <Skeleton className="w-158 h-240 mb-2 rounded-md" />
-              <Skeleton className="w-158 h-80 mb-2 rounded-md" />
-              <Skeleton className="w-158 h-120 mb-2 rounded-md" />
+              <Skeleton className="w-158 h-192 mb-2 rounded-lg" />
+              <Skeleton className="w-158 h-240 mb-2 rounded-lg" />
+              <Skeleton className="w-158 h-80 mb-2 rounded-lg" />
+              <Skeleton className="w-158 h-120 mb-2 rounded-lg" />
              
             </div>
           ) : (
