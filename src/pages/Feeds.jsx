@@ -1,10 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Menu from "../assets/Feeds/Menu.png";
-import Nyc1 from "../assets/Feeds/nyc1.png";
-import Nyc2 from "../assets/Feeds/nyc2.png";
-import Vid1 from "../assets/Feeds/vid1.png";
-import { IoHeartSharp } from "react-icons/io5";
-import { RiSendPlaneFill } from "react-icons/ri";
 import Dialog from "rc-dialog";
 import "rc-dialog/assets/index.css";
 import { sharePost } from "./constants";
@@ -23,6 +17,7 @@ import { getAuth } from "firebase/auth";
 import PostSection from "./components/PostSection";
 import "../App.css";
 import { BsPlus } from "react-icons/bs";
+import PostSkeleton from "./components/PostSkeleton";
 
 function Feeds() {
   const navigate = useNavigate();
@@ -110,8 +105,12 @@ function Feeds() {
         </nav>
         <div className="font-semibold text-[24px] mx-3">Feeds</div>
         <section className="flex flex-col gap-2 mx-3 overflow-y-scroll  h-screen">
+          
           {posts.length === 0
-            ? "loading..."
+            ? <>
+              <PostSkeleton/>
+              <PostSkeleton/>
+            </ >
             : posts.map((post, i) => (
                 <PostSection
                   key={post.id} // Always provide a unique key for lists

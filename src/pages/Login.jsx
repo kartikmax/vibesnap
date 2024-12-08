@@ -3,10 +3,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider ,} from "firebase/auth";
 import { useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import { app } from "../firebase.config";
-// import { useDispatch } from "react-redux";
-// import { setUser } from "../store/slices/userSlice";
 import Banner from "../assets/Profile/banner.png"
-
 import { db } from "../firebase.config";
 import { addDoc, collection, query, where, getDocs  } from "firebase/firestore";
 
@@ -75,7 +72,7 @@ const handleGoogleSignIn = async () => {
   
 
   return (
-    <div className="flex items-center relative justify-center flex-col border border-black">
+    <div className="flex items-center relative justify-center flex-col ">
       <div className="flex flex-col h-[800px]">
         <div className="columns-3 w-[360px] relative">
           <img src={c1p1} className="mb-3" alt="" />

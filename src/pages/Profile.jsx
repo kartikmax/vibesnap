@@ -23,13 +23,6 @@ function Profile() {
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const { username, photoURL, bio, bannerURL, uid } = storedUser || {};
 
-  // Function to handle file selection
-  // const handleFileSelect = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     handleUpload(file);
-  //   }
-  // };
 
   // Function to upload files to Firebase Storage
   const handleUpload = async (file) => {
@@ -98,7 +91,7 @@ function Profile() {
 
   return (
     <div className="flex items-center relative justify-center flex-col">
-      <div className="w-[360px] h-[800px] flex flex-col border relative border-black gap-2">
+      <div className="w-[360px] h-[800px] flex flex-col border relative  gap-2">
         {/* Banner Image */}
         <div className="relative">
           <nav className="flex z-10 absolute text-white items-center py-3">
@@ -121,7 +114,7 @@ function Profile() {
             />
           </div>
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-end pr-2">
           <button
             className="rounded-full border border-[#00000057] px-4 py-1 text-[12px] w-[200px]"
             onClick={() => {

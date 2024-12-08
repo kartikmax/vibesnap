@@ -65,7 +65,7 @@ function CreatePosts() {
 
   return (
     <div className="flex items-center relative justify-center flex-col">
-      <div className="w-[360px] h-[800px] flex flex-col border relative border-black gap-2">
+      <div className="w-[360px] h-[800px] flex flex-col border relative  gap-2">
         {/* Navigation */}
         <nav className="flex items-center py-3">
           <button
@@ -77,7 +77,7 @@ function CreatePosts() {
           <div className="text-[20px] font-bold">New Post</div>
         </nav>
 
-        {/* File Upload and Preview */}
+        {/* todo : short the code here*/}
         <div className="flex justify-center mt-4">
           {file ? (
             <img
