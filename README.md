@@ -16,6 +16,8 @@ https://vibesnap-nje7.vercel.app/
   <img src="./src/assets/screenshots/vibesnap-profile.png" alt="Vibesnap profile" height="150" style="object-fit: cover;" />
 </div>
 
+
+
 ## Run Locally
 
 Clone the project

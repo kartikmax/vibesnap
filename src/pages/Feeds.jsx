@@ -11,6 +11,7 @@ import {
   getDocs,
   collection,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { getAuth } from "firebase/auth";
@@ -27,6 +28,7 @@ function Feeds() {
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const { username, photoURL, bio, bannerURL } = storedUser || {};
   const auth = getAuth();
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -80,6 +82,66 @@ function Feeds() {
     }
   }, []);
 
+  const handleLike = async (postId) => {
+    try {
+      const userId = auth.currentUser.uid; // Get the current user's ID
+      const postRef = doc(db, "posts", postId);
+      const postDoc = await getDoc(postRef);
+
+      if (postDoc.exists()) {
+        const postData = postDoc.data();
+        const currentLikes = postData.likes || 0;
+        const likedBy = postData.likedBy || []; // Array of user IDs who liked the post
+
+        if (liked) {
+          // User has already liked the post, perform "unlike" action
+          await updateDoc(postRef, {
+            likes: currentLikes - 1,
+            likedBy: likedBy.filter((id) => id !== userId), // Remove user ID from likedBy array
+          });
+
+          // Update local state for UI
+          setLiked(false);
+
+          setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+              post.id === postId
+                ? {
+                    ...post,
+                    likes: currentLikes - 1,
+                    likedBy: likedBy.filter((id) => id !== userId),
+                  }
+                : post
+            )
+          );
+        } else {
+          // User has not liked the post, perform "like" action
+          await updateDoc(postRef, {
+            likes: currentLikes + 1,
+            likedBy: [...likedBy, userId], // Add user ID to likedBy array
+          });
+
+          // Update local state for UI
+          setLiked(true);
+
+          setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+              post.id === postId
+                ? {
+                    ...post,
+                    likes: currentLikes + 1,
+                    likedBy: [...likedBy, userId],
+                  }
+                : post
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    }
+  };
+
   const showDialog = () => setVisible(true);
   const closeDialog = () => setVisible(false);
 
@@ -105,35 +167,40 @@ function Feeds() {
         </nav>
         <div className="font-semibold text-[24px] mx-3">Feeds</div>
         <section className="flex flex-col gap-2 mx-3 overflow-y-scroll  h-screen">
-          
-          {posts.length === 0
-            ? <>
-              <PostSkeleton/>
-              <PostSkeleton/>
-            </ >
-            : posts.map((post, i) => (
-                <PostSection
-                  key={post.id} // Always provide a unique key for lists
-                  caption={post.caption}
-                  likes={post.likes}
-                  post={post.postURL}
-                  name={post.username}
-                  photoURL={post.photoURL}
-                  showDialog={showDialog}
-                  background={i % 2 === 0 ? "bg-[#f7ebff]" : "bg-[#fffaee]"}
-                />
-              ))}
+          {posts.length === 0 ? (
+            <>
+              <PostSkeleton />
+              <PostSkeleton />
+            </>
+          ) : (
+            posts.map((post, i) => (
+              <PostSection
+                key={post.id}
+                name={post.username}
+                time={post.time}
+                post={post.postURL}
+                likes={post.likes}
+                likedBy={liked}
+                caption={post.caption}
+                showDialog={showDialog}
+                photoURL={post.photoURL}
+                background={i % 2 === 0 ? "bg-[#f7ebff]" : "bg-[#fffaee]"}
+                handleLike={handleLike} // Pass the handleLike function
+                postId={post.id} // Pass the post ID
+              />
+            ))
+          )}
         </section>
         <button
-        className="w-[50px] h-[50px] absolute z-10 rounded-full bottom-32 right-2 bg-[#000000] text-white flex justify-center items-center "
-        onClick={() => {
-          navigate("/createPosts");
-        }}
-      >
-        <BsPlus fontSize={30} />
-      </button>
+          className="w-[50px] h-[50px] absolute z-10 rounded-full bottom-32 right-2 bg-[#000000] text-white flex justify-center items-center "
+          onClick={() => {
+            navigate("/createPosts");
+          }}
+        >
+          <BsPlus fontSize={30} />
+        </button>
       </div>
-      
+
       <Dialog
         visible={visible}
         onClose={closeDialog}
