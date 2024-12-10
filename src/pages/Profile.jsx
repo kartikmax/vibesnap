@@ -9,6 +9,7 @@ import Banner from "../assets/Profile/banner.png";
 // import Banner from "../assets/Profile/banner.png";
 import ProfileImg from "../assets/Profile/profile.png";
 import Skeleton from "./components/Skeleton";
+import {isImageOrVideo} from '../utils/common'
 
 function Profile() {
   const navigate = useNavigate();
@@ -140,28 +141,20 @@ function Profile() {
             </div>
           ) : (
             <div className="columns-2 gap-1 mt-1">
-              {postUrls.map((post, i) => (
-                <img
-                  src={post}
-                  key={i}
-                  className="rounded-lg mb-2"
-                  alt={`Post ${i + 1}`}
-                />
+              {postUrls.map((post, i) => (<>
+                
+                  {isImageOrVideo(post)==='image' &&  <img src={post} alt="post" key={i} className="rounded-lg mb-2" /> }
+                  {isImageOrVideo(post)==='video' && (
+                    <video key={i} controls className="rounded-lg mb-2" poster={post + "#t=0.1"}>
+                      <source src={post} />
+                    </video>
+                  ) }
+                  </>
               ))}
             </div>
           )}
         </div>
 
-        {/* Hidden File Input */}
-        {/* <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleFileSelect}
-        /> */}
-
-        {/* "+" Button */}
         <button
           className="w-[50px] h-[50px] absolute z-10 rounded-full bottom-40 right-2 bg-[#000000] text-white flex justify-center items-center "
           onClick={()=>{

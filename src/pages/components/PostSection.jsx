@@ -1,7 +1,8 @@
 import React from "react";
 import { IoHeartSharp } from "react-icons/io5";
 import { RiSendPlaneFill } from "react-icons/ri";
-import { isImageOrVideo } from "../../utils/common";
+import { isImageOrVideo,getTimeAgo } from "../../utils/common";
+import { Timestamp } from "firebase/firestore";
 
 function PostSection({
   name,
@@ -18,7 +19,7 @@ function PostSection({
   // console.log(post,time);
 
   const mediaType = isImageOrVideo(post) //250x150
-  console.log(mediaType,post)
+  console.log(time.nanoseconds,time,getTimeAgo(time))
 
   return (
     <section
@@ -29,7 +30,7 @@ function PostSection({
         <img src={photoURL} alt="profile" className="w-10 h-10 rounded-full" />
         <div className="flex flex-col">
           <div className="font-semibold text-sm">{name}</div>
-          <div className="font-thin text-xs"> ago</div>
+          <div className="font-thin text-xs">{getTimeAgo(time)}  ago</div>
         </div>
       </div>
       <div className="caption font-normal text-[12px]">{caption}</div>
