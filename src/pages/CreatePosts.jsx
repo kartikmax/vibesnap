@@ -3,7 +3,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { storage, db } from "../firebase.config"; // Ensure Firebase is correctly configured
+import { storage, db } from "../firebase.config"; 
 import PostPlaceholder from "../assets/CreatePosts/post.png";
 
 function CreatePosts() {
@@ -76,22 +76,12 @@ function CreatePosts() {
           </button>
           <div className="text-[20px] font-bold">New Post</div>
         </nav>
-
-        {/* todo : short the code here*/}
         <div className="flex justify-center mt-4">
-          {file ? (
-            <img
-              src={URL.createObjectURL(file)}
-              className="w-[280px] h-[285px]"
-              alt="Preview"
-            />
-          ) : (
-            <img
-              src={PostPlaceholder}
-              className="w-[280px] h-[285px]"
-              alt="Placeholder"
-            />
-          )}
+          <img
+            src={file? URL.createObjectURL(file):PostPlaceholder}
+            className="w-[280px] h-[285px]"
+            alt="Preview"
+          />
         </div>
         <div className="flex justify-center mt-2">
           <input
@@ -108,8 +98,6 @@ function CreatePosts() {
             Select File
           </label>
         </div>
-
-        {/* Caption Input */}
         <div className="px-4 mt-3 text-black">
           <textarea
             id="caption"
@@ -121,7 +109,6 @@ function CreatePosts() {
           />
         </div>
 
-        {/* Create Button */}
         <div className="w-full absolute bottom-36 flex justify-center">
           <button
             onClick={handleCreatePost}

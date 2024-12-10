@@ -4,7 +4,7 @@ import Banner from "../assets/Profile/banner.png";
 import { HiPencil } from "react-icons/hi";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { query, collection, where, getDocs, updateDoc,doc ,getDoc} from "firebase/firestore";
 import { db,storage } from "../firebase.config";
 import { getAuth } from "firebase/auth";
@@ -18,9 +18,8 @@ function EditProfile() {
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const { username, photoURL, bio, bannerURL, userId  } = storedUser || {};
 
-  console.log(auth.currentUser, userId)
+ 
   const usersCollectionRef = collection(db, "users");
-        console.log(usersCollectionRef)
   
   const [userNameInput, setUserNameInput] = useState(username || "");
   const [bioInput, setBioInput] = useState(bio || "");
@@ -46,12 +45,8 @@ function EditProfile() {
         const storageRef = ref(storage,`users/${auth.currentUser.uid}/${type}/${file.name}`); 
         await uploadBytes(storageRef, file); 
         const downloadURL = await getDownloadURL(storageRef); 
-  
-        console.log(`Updated ${type} URL:`, downloadURL);
-  
-       
         const usersCollectionRef = collection(db, "users");
-        console.log(usersCollectionRef)
+       
         const q = query(usersCollectionRef, where("uid", "==", auth.currentUser.uid)); // Match user's email
         const querySnapshot = await getDocs(q);
   
@@ -117,21 +112,17 @@ function EditProfile() {
           return;
         }
   
-        // Update the first matching document
         const userDocRefByEmail = querySnapshot.docs[0].ref;
         await updateDoc(userDocRefByEmail, updatedData);
       }
   
       localStorage.setItem("user", JSON.stringify(updatedData));
-      console.log("Profile updated successfully!");
       navigate("/profile");
     } catch (error) {
       console.error("Error updating profile:", error);
     }
   };
   
-  
-
   return (
     <div className="flex items-center relative justify-center flex-col">
       <div className="w-[360px] h-[800px] flex flex-col border relative gap-2">

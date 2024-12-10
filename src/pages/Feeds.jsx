@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Dialog from "rc-dialog";
-import "rc-dialog/assets/index.css";
-import { sharePost } from "./constants";
-import Copy from "../assets/Feeds/copy.png";
+
+
 import { useNavigate } from "react-router";
 import {
   doc,
@@ -22,13 +20,14 @@ import PostSkeleton from "./components/PostSkeleton";
 
 function Feeds() {
   const navigate = useNavigate();
+  const auth = getAuth();
 
-  const [visible, setVisible] = useState(false);
+
   const [posts, setPosts] = useState([]);
   const storedUser = JSON.parse(localStorage.getItem("user"));
-  const { username, photoURL, bio, bannerURL } = storedUser || {};
-  const auth = getAuth();
+  const { username, photoURL } = storedUser || {};
   const [liked, setLiked] = useState(false);
+
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -42,7 +41,6 @@ function Feeds() {
         }));
 
         setPosts(allPosts);
-        // console.log("Fetched posts:", allPosts);
       } catch (error) {
         navigate("/");
         console.error("Error fetching posts:", error);
@@ -50,11 +48,7 @@ function Feeds() {
     };
 
     fetchPosts();
-  }, []);
 
-  console.log(posts);
-
-  useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const usersCollectionRef = collection(db, "usersData");
 
@@ -91,8 +85,7 @@ function Feeds() {
       if (postDoc.exists()) {
         const postData = postDoc.data();
         const currentLikes = postData.likes || 0;
-        const likedBy = postData.likedBy || []; // Array of user IDs who liked the post
-
+        const likedBy = postData.likedBy || [];
         if (liked) {
           // User has already liked the post, perform "unlike" action
           await updateDoc(postRef, {
@@ -115,15 +108,11 @@ function Feeds() {
             )
           );
         } else {
-          // User has not liked the post, perform "like" action
           await updateDoc(postRef, {
             likes: currentLikes + 1,
             likedBy: [...likedBy, userId], // Add user ID to likedBy array
           });
-
-          // Update local state for UI
           setLiked(true);
-
           setPosts((prevPosts) =>
             prevPosts.map((post) =>
               post.id === postId
@@ -141,9 +130,6 @@ function Feeds() {
       console.error("Error toggling like:", error);
     }
   };
-
-  const showDialog = () => setVisible(true);
-  const closeDialog = () => setVisible(false);
 
   return (
     <div className="flex items-center relative justify-center flex-col ">
@@ -185,8 +171,8 @@ function Feeds() {
                 showDialog={showDialog}
                 photoURL={post.photoURL}
                 background={i % 2 === 0 ? "bg-[#f7ebff]" : "bg-[#fffaee]"}
-                handleLike={handleLike} // Pass the handleLike function
-                postId={post.id} // Pass the post ID
+                handleLike={handleLike}
+                postId={post.id}
               />
             ))
           )}
@@ -201,48 +187,7 @@ function Feeds() {
         </button>
       </div>
 
-      <Dialog
-        visible={visible}
-        onClose={closeDialog}
-        animation="zoom"
-        title={
-          <div className="font-semibold text-[20px] text-black">Share post</div>
-        }
-        maskAnimation="fade"
-        // closeIcon={<span style={{ fontSize: "20px" }}>x</span>}
-        style={{
-          borderRadius: "12px",
-          width: "328px",
-          height: "378px",
-          justifyContent: "center",
-        }}
-      >
-        <section className="flex flex-wrap gap-4 justify-center">
-          {sharePost.map((item, i) => (
-            <div key={i} className="text-center">
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center "
-                style={{ backgroundColor: item.bgColor }}
-              >
-                <div style={{ color: item.iconColor, fontSize: "24px" }}>
-                  {item.icon}
-                </div>
-              </div>
-              <p className="mt-2 text-xs text-gray-700">{item.name}</p>
-            </div>
-          ))}
-        </section>
-        {/* <p>This is an example dialog styled like Ant Design.</p> */}
-        <section className="flex flex-col">
-          <div className="text-[14px]">Page Link</div>
-          <div className="bg-[#D9D9D9] flex justify-between p-2 rounded-[8px]">
-            <div className="text-[12px]">https://www.arnav/feed</div>
-            <button>
-              <img src={Copy} alt="copy" />{" "}
-            </button>
-          </div>
-        </section>
-      </Dialog>
+      
     </div>
   );
 }

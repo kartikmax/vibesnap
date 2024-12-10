@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 export const isImageOrVideo = (url) => {
   const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"];
   const videoExtensions = ["mp4", "webm", "ogg", "mkv", "mov", "avi", "flv"];

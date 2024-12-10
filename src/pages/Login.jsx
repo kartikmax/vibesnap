@@ -55,11 +55,8 @@ const handleGoogleSignIn = async () => {
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      // Add the user if no existing document matches
       const docRef = await addDoc(userCollectionRef, authUser);
-      console.log("User added to Firestore with ID:", docRef.id);
-    } else {
-      console.log("User already exists in Firestore.");
+      // console.log("User added to Firestore with ID:", docRef.id);
     }
 
     localStorage.setItem("user", JSON.stringify(authUser));
