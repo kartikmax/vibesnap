@@ -3,8 +3,8 @@ import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { storage, db } from "../firebase.config"; 
-import PostPlaceholder from "../assets/CreatePosts/post.png";
+import { storage, db } from "../../firebase.config"; 
+import PostPlaceholder from "../../assets/CreatePosts/post.png";
 
 function CreatePosts() {
   const navigate = useNavigate();

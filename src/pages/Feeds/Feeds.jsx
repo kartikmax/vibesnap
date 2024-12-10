@@ -11,12 +11,12 @@ import {
   addDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../firebase.config";
+import { db } from "../../firebase.config";
 import { getAuth } from "firebase/auth";
-import PostSection from "./components/PostSection";
-import "../App.css";
+import "../../App.css";
 import { BsPlus } from "react-icons/bs";
-import PostSkeleton from "./components/PostSkeleton";
+import PostSkeleton from "../components/PostSkeleton";
+import PostSection from "../components/PostSection";
 
 function Feeds() {
   const navigate = useNavigate();
@@ -168,7 +168,6 @@ function Feeds() {
                 likes={post.likes}
                 likedBy={liked}
                 caption={post.caption}
-                showDialog={showDialog}
                 photoURL={post.photoURL}
                 background={i % 2 === 0 ? "bg-[#f7ebff]" : "bg-[#fffaee]"}
                 handleLike={handleLike}

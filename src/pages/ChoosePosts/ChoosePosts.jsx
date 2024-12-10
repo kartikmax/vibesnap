@@ -1,7 +1,7 @@
 import React from "react";
 import { HiCash, HiCamera } from "react-icons/hi";
 import { IoMdArrowBack } from "react-icons/io"; 
-import Post from "../assets/ChoosePosts/posts.png";
+import Post from "../../assets/ChoosePosts/posts.png";
 
 function ChoosePosts() {
   return (

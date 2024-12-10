@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import ProfileImg from "../assets/Profile/profile.png";
-import Banner from "../assets/Profile/banner.png";
+import ProfileImg from "../../assets/Profile/profile.png";
+import Banner from "../../assets/Profile/banner.png";
 import { HiPencil } from "react-icons/hi";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { query, collection, where, getDocs, updateDoc,doc ,getDoc} from "firebase/firestore";
-import { db,storage } from "../firebase.config";
+import { db,storage } from "../../firebase.config";
 import { getAuth } from "firebase/auth";
 // import { } from "firebase/firestore";
 

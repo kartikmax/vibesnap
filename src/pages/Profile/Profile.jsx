@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { storage } from "../firebase.config";
+import { storage } from "../../firebase.config";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { BsPlus } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { IoMdArrowBack } from "react-icons/io";
-import Banner from "../assets/Profile/banner.png";
-import ProfileImg from "../assets/Profile/profile.png";
-import Skeleton from "./components/Skeleton";
-import { isImageOrVideo } from '../utils/common'
+import Banner from "../../assets/Profile/banner.png";
+import ProfileImg from "../../assets/Profile/profile.png";
+import Skeleton from "../components/Skeleton";
+import { isImageOrVideo } from '../../utils/common'
 
 function Profile() {
 
