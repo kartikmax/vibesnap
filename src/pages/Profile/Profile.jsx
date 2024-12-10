@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { storage } from "../../firebase.config";
+import { storage,db } from "../../firebase.config";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { BsPlus } from "react-icons/bs";
@@ -9,17 +9,59 @@ import Banner from "../../assets/Profile/banner.png";
 import ProfileImg from "../../assets/Profile/profile.png";
 import Skeleton from "../components/Skeleton";
 import { isImageOrVideo } from '../../utils/common'
+import { collection,query,where,getDocs } from "firebase/firestore";
+// import { db } from "../../firebase.config";
 
 function Profile() {
 
-  const navigate = useNavigate();
-  const [postUrls, setPostUrls] = useState([]); // Store post URLs
-  const [loadingPosts, setLoadingPosts] = useState(true);
-
   const auth = getAuth();
   const user = auth.currentUser;
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  const { username, photoURL, bio, bannerURL, uid } = storedUser || {};
+
+  const navigate = useNavigate();
+  const [postUrls, setPostUrls] = useState([]); 
+  const [currentUserId,setCurrentUserId] = useState(user?.uid)
+  const [inputValues, setInputValues] = useState({
+    userNameInput: user.displayName,
+    bioInput: "Hi,I am using Vibesnap",
+    profilePhoto: user.photoURL,
+    bannerPhoto: Banner,
+  });
+
+
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const userUid = auth.currentUser?.uid;
+        if (!userUid) {
+          console.error("No authenticated user found.");
+          return;
+        }
+        setCurrentUserId(userUid);
+
+        const usersCollectionRef = collection(db, "users");
+        const q = query(usersCollectionRef, where("uid", "==", userUid));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          console.error("No user document found for the current user.");
+          return;
+        }
+
+        const userData = querySnapshot.docs[0].data();
+        setInputValues({
+          userNameInput: userData.username || "",
+          bioInput: userData.bio || "",
+          profilePhoto: userData.photoURL || ProfileImg,
+          bannerPhoto: userData.bannerURL || Banner,
+        });
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   const fetchPosts = async () => {
     if (!user) {
@@ -27,8 +69,8 @@ function Profile() {
       return;
     }
 
-    setLoadingPosts(true);
-    const postsRef = ref(storage, `users/${uid}/posts`);
+    // setLoadingPosts(true);
+    const postsRef = ref(storage, `users/${currentUserId}/posts`);
 
     try {
       const listResult = await listAll(postsRef); 
@@ -38,9 +80,10 @@ function Profile() {
       setPostUrls(urls);
     } catch (error) {
       console.error("Error fetching posts:", error.message);
-    } finally {
-      setLoadingPosts(false);
-    }
+    } 
+    // finally {
+    //   setLoadingPosts(false);
+    // }
   };
 
 
@@ -66,11 +109,11 @@ function Profile() {
               <IoMdArrowBack fontSize={20} />
             </button>
           </nav>
-          <img src={bannerURL || Banner} className="h-[180px]" alt="Banner" />
+          <img src={inputValues.bannerPhoto || Banner} className="h-[180px]" alt="Banner" />
           {/* Profile Image */}
           <div className="absolute left-[10px] bottom-[-40px]">
             <img
-              src={photoURL || ProfileImg}
+              src={inputValues.profilePhoto || ProfileImg}
               className="w-[112px] h-[112px] rounded-full"
               alt="Profile"
             />
@@ -88,8 +131,8 @@ function Profile() {
         </div>
 
         <div className="flex flex-col px-4">
-          <div className="font-semibold text-lg mt-4">{username || "user"}</div>
-          <div className="text-[14px] text-gray-600">{bio}</div>
+          <div className="font-semibold text-lg mt-4">{inputValues.userNameInput || "user"}</div>
+          <div className="text-[14px] text-gray-600">{inputValues.bioInput}</div>
           <div className="text-[18px] font-semibold mt-2">My Posts</div>
 
           {postUrls.length === 0 ? (

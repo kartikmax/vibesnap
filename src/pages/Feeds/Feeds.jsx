@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-
-
 import { useNavigate } from "react-router";
 import {
   doc,
@@ -9,25 +7,33 @@ import {
   getDocs,
   collection,
   addDoc,
-  updateDoc,
+  updateDoc,query,where
 } from "firebase/firestore";
-import { db } from "../../firebase.config";
+import { storage,db } from "../../firebase.config";
 import { getAuth } from "firebase/auth";
 import "../../App.css";
 import { BsPlus } from "react-icons/bs";
 import PostSkeleton from "../components/PostSkeleton";
 import PostSection from "../components/PostSection";
 
+
 function Feeds() {
   const navigate = useNavigate();
   const auth = getAuth();
-
+  const user = auth.currentUser;
 
   const [posts, setPosts] = useState([]);
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  const { username, photoURL } = storedUser || {};
+  // const storedUser = JSON.parse(localStorage.getItem("user"));
+  // const { username, photoURL } = storedUser || {};
   const [liked, setLiked] = useState(false);
 
+  const [currentUserId,setCurrentUserId] = useState(user?.uid)
+  const [inputValues, setInputValues] = useState({
+    userNameInput: user?.displayName,
+    profilePhoto: user?.photoURL,
+  });
+
+  console.log(auth.currentUser)
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -74,6 +80,37 @@ function Feeds() {
 
       localStorage.setItem("user", JSON.stringify(authUser));
     }
+
+    const fetchCurrentUser = async () => {
+      try {
+        const userUid = auth.currentUser?.uid;
+        if (!userUid) {
+          console.error("No authenticated user found.");
+          return;
+        }
+        setCurrentUserId(userUid);
+
+        const usersCollectionRef = collection(db, "users");
+        const q = query(usersCollectionRef, where("uid", "==", userUid));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          console.error("No user document found for the current user.");
+          return;
+        }
+
+        const userData = querySnapshot.docs[0].data();
+        setInputValues({
+          userNameInput: userData.username || "",
+          profilePhoto: userData.photoURL || ProfileImg,
+        });
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+
+    fetchCurrentUser();
+
   }, []);
 
   const handleLike = async (postId) => {
@@ -141,14 +178,14 @@ function Feeds() {
             }}
           >
             <img
-              src={photoURL}
+              src={inputValues.profilePhoto}
               alt="profile image"
               className="w-[50px] h-[50px] rounded-full"
             />
           </button>
           <div className="items-center mt-1 px-2  ">
             <div className="text-xs ">Welcome Back</div>
-            <div className="font-semibold">{username || "user"}</div>
+            <div className="font-semibold">{inputValues.userNameInput || "user"}</div>
           </div>
         </nav>
         <div className="font-semibold text-[24px] mx-3">Feeds</div>
