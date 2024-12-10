@@ -21,9 +21,9 @@ function Profile() {
   const [postUrls, setPostUrls] = useState([]); 
   const [currentUserId,setCurrentUserId] = useState(user?.uid)
   const [inputValues, setInputValues] = useState({
-    userNameInput: user.displayName,
+    userNameInput: user?.displayName,
     bioInput: "Hi,I am using Vibesnap",
-    profilePhoto: user.photoURL,
+    profilePhoto: user?.photoURL,
     bannerPhoto: Banner,
   });
 
